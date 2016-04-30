@@ -20,6 +20,20 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+# Get the project root dir, which is the parent dir of this
+cwd = os.getcwd()
+project_root = os.path.dirname(cwd)
+
+# Insert the project root dir as the first element in the PYTHONPATH.
+# This lets us ensure that the source package is imported, and that its
+# version is used.
+sys.path.insert(0, project_root)
+
+tests_directory = os.path.join(project_root, 'tests')
+sys.path.insert(0, tests_directory)
+
+import dummyserial
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -28,7 +42,7 @@ import os
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = []
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -74,7 +88,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'setup.py', 'tests']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -100,6 +114,8 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+autodoc_member_order = 'bysource'
+
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
@@ -108,7 +124,7 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -137,7 +153,7 @@ html_theme = 'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -148,6 +164,7 @@ html_static_path = ['_static']
 # bottom, using the given strftime format.
 # The empty string is equivalent to '%b %d, %Y'.
 #html_last_updated_fmt = None
+html_last_updated_fmt = '%Y-%m-%d %H:%M %Z (%z)'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
