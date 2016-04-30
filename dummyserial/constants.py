@@ -18,10 +18,10 @@ LOG_FORMAT = logging.Formatter(
     ' - %(message)s')
 
 
-# The default timeout value in seconds. Used if not set by the constructor.
+# The default timeout value in seconds.
 DEFAULT_TIMEOUT = 2
 
-# The default baud rate. Used if not set by the constructor.
+# The default Baud Rate. 
 DEFAULT_BAUDRATE = 9600
 
 # A dictionary of respones from the dummy serial port.
