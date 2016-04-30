@@ -3,7 +3,6 @@
 
 # Dummy Serial Python Module.
 
-from .classes import DummySerial
 
 """
 Dummy Serial Python Module.
@@ -16,3 +15,5 @@ Dummy Serial Python Module.
 :source: <https://github.com/ampledata/Dummy Serial>
 
 """
+
+from .classes import Serial  # NOQA

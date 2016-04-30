@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Dummy Serial Constants."""
+
 import logging
 
-"""
-Constants for Dummy Serial Module.
-"""
 
 __author__ = 'Greg Albrecht <gba@orionlabs.io>'
 __license__ = 'Apache License, Version 2.0'
@@ -21,7 +20,7 @@ LOG_FORMAT = logging.Formatter(
 # The default timeout value in seconds.
 DEFAULT_TIMEOUT = 2
 
-# The default Baud Rate. 
+# The default Baud Rate.
 DEFAULT_BAUDRATE = 9600
 
 # A dictionary of respones from the dummy serial port.

@@ -9,8 +9,10 @@ __copyright__ = 'Copyright 2016 Orion Labs, Inc.'
 
 
 class DSIOError(IOError):
+    """Dummy Serial Wrapper for IOError Exception."""
     pass
 
 
 class DSTypeError(TypeError):
+    """Dummy Serial Wrapper for TypeError Exception."""
     pass

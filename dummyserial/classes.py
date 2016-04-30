@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Dummy Serial Class Definitions"""
+
 import logging
 import logging.handlers
 import sys
 import time
 
-import dummyserial.constants
-import dummyserial.exceptions
+from serial.serialutil import portNotOpenError
 
-"""Dummy Serial Class Definitions"""
+import dummyserial.constants
 
 __author__ = 'Greg Albrecht <gba@orionlabs.io>'
 __license__ = 'Apache License, Version 2.0'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc.'
 
 
-class DummySerial(object):
+class Serial(object):
     """
     Dummy (mock) serial port for testing purposes.
 
@@ -45,7 +46,7 @@ class DummySerial(object):
         self._logger.debug('args=%s', args)
         self._logger.debug('kwargs=%s', kwargs)
 
-        self._isOpen = True
+        self.is_open = True
         self._waiting_data = dummyserial.constants.NO_DATA_PRESENT
 
         self.port = kwargs['port']  # Serial port name.
@@ -58,14 +59,14 @@ class DummySerial(object):
             'baudrate', dummyserial.constants.DEFAULT_BAUDRATE)
 
     def __repr__(self):
-        """String representation of the DummySerial object"""
+        """String representation of the DummySerial object."""
         return (
             "{0}.{1}<id=0x{2:x}, open={3}>(port={4!r}, timeout={5!r}, "
             "waiting_data={6!r})".format(
                 self.__module__,
                 self.__class__.__name__,
                 id(self),
-                self._isOpen,
+                self.is_open,
                 self.port,
                 self.timeout,
                 self._waiting_data,
@@ -76,20 +77,20 @@ class DummySerial(object):
         """Open a (previously initialized) port."""
         self._logger.debug('Opening port')
 
-        if self._isOpen:
+        if self.is_open:
             raise dummyserial.exceptions.DSIOError('Port already opened.')
 
-        self._isOpen = True
+        self.is_open = True
         self.port = self.initial_port_name
 
     def close(self):
         """Close a port on dummy_serial."""
         self._logger.debug('Closing port')
 
-        if not self._isOpen:
+        if not self.is_open:
             raise dummyserial.exceptions.DSIOError('Port already closed.')
 
-        self._isOpen = False
+        self.is_open = False
         self.port = None
 
     def write(self, inputdata):
@@ -102,19 +103,18 @@ class DummySerial(object):
 
         Note that for Python2, the inputdata should be a **string**. For
         Python3 it should be of type **bytes**.
-
         """
         self._logger.debug('Writing "%s"', inputdata)
 
         if sys.version_info[0] > 2:
-            if not type(inputdata) == bytes:
+            if not isinstance(inputdata, bytes):
                 raise dummyserial.exceptions.DSTypeError(
                     'The input must be type bytes. Given:' + repr(inputdata))
             inputstring = str(inputdata, encoding='latin1')
         else:
             inputstring = inputdata
 
-        if not self._isOpen:
+        if not self.is_open:
             raise dummyserial.exceptions.DSIOError(
                 'Trying to write, but the port is not open. Given:' +
                 repr(inputdata))
@@ -123,60 +123,56 @@ class DummySerial(object):
         # commands.
         self._waiting_data = self.ds_responses.get(inputstring)
 
-    def read(self, numberOfBytes):
+    def read(self, size=1):
         """
-        Read from a port.
+        Read size bytes from the Dummy Serial Responses.
 
         The response is dependent on what was written last to the port on
         dummyserial, and what is defined in the :data:`RESPONSES` dictionary.
 
         Args:
-            numberOfBytes (int): For compability with the real function.
+            size (int): For compability with the real function.
 
         Returns a **string** for Python2 and **bytes** for Python3.
 
-        If the response is shorter than numberOfBytes, it will sleep for
-        timeout.
+        If the response is shorter than size, it will sleep for timeout.
 
-        If the response is longer than numberOfBytes, it will return only
-        numberOfBytes bytes.
+        If the response is longer than size, it will return only size bytes.
 
         """
-        self._logger.debug(
-            'Reading from port (max length %s bytes)', numberOfBytes)
+        self._logger.debug('Reading %s bytes.', size)
 
-        if numberOfBytes < 0:
-            raise dummyserial.exceptions.DSIOError(
-                'The numberOfBytes to read must not be negative. ' +
-                'Given: {!r}'.format(numberOfBytes))
+        if not self.is_open:
+            raise portNotOpenError
 
-        if not self._isOpen:
+        if size < 0:
             raise dummyserial.exceptions.DSIOError(
-                'Trying to read, but the port is not open.')
+                'The size to read must not be negative. ' +
+                'Given: {!r}'.format(size))
 
         # Do the actual reading from the waiting data, and simulate the
-        # influence of numberOfBytes.
+        # influence of size.
 
         if self._waiting_data == dummyserial.constants.DEFAULT_RESPONSE:
             returnstring = self._waiting_data
-        elif numberOfBytes == len(self._waiting_data):
+        elif size == len(self._waiting_data):
             returnstring = self._waiting_data
             self._waiting_data = dummyserial.constants.NO_DATA_PRESENT
-        elif numberOfBytes < len(self._waiting_data):
+        elif size < len(self._waiting_data):
             self._logger.debug(
-                'The numberOfBytes to read is smaller than the available ',
-                'data. Some bytes will be kept for later. Available data: ',
-                '%s (length = %s), numberOfBytes: %s',
-                self._waiting_data, len(self._waiting_data), numberOfBytes)
+                'The size to read is smaller than the available ' +
+                'data. Some bytes will be kept for later. Available data: ' +
+                '%s (length = %s), size: %s',
+                self._waiting_data, len(self._waiting_data), size)
 
-            returnstring = self._waiting_data[:numberOfBytes]
-            self._waiting_data = self._waiting_data[numberOfBytes:]
+            returnstring = self._waiting_data[:size]
+            self._waiting_data = self._waiting_data[size:]
         else:  # Wait for timeout - we asked for more data than available!
             self._logger.debug(
-                'The numberOfBytes to read is larger than the available ' +
+                'The size to read is larger than the available ' +
                 'data. Will sleep until timeout. Available data: ' +
-                '%s (length = %s), numberOfBytes: %s',
-                self._waiting_data, len(self._waiting_data), numberOfBytes)
+                '%s (length = %s), size: %s',
+                self._waiting_data, len(self._waiting_data), size)
 
             time.sleep(self.timeout)
             returnstring = self._waiting_data
@@ -193,5 +189,8 @@ class DummySerial(object):
         else:
             return returnstring
 
-    def outWaiting(self):
+    def out_waiting(self):  # pylint: disable=C0103
+        """Returns length of waiting output data."""
         return len(self._waiting_data)
+
+    outWaiting = out_waiting  # pyserial 2.7 / 3.0 compat.

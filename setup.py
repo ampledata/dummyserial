@@ -36,7 +36,7 @@ setuptools.setup(
     description='Dummy Serial Implementation.',
     author='Greg Albrecht',
     author_email='gba@orionlabs.io',
-    packages=['aprs'],
+    packages=['dummyserial'],
     package_data={'': ['LICENSE']},
     license=open('LICENSE').read(),
     long_description=open('README.rst').read(),
