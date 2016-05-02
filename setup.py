@@ -9,7 +9,7 @@ Source:: https://github.com/ampledata/dummyserial
 
 
 __title__ = 'dummyserial'
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 __author__ = 'Greg Albrecht <gba@orionlabs.io>'
 __license__ = 'Apache License, Version 2.0'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc.'
