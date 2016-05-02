@@ -1,6 +1,19 @@
 Python Module for Dummy Serial
 ******************************
 
+Emulates pyserial's write/read responses from a serial port.
+
+Works by suppling a dictionary of responses to various paramters.
+
+For example::
+
+    ds_responses = {
+        'taco': 'yum'
+    }
+
+Would `read()` *yum* for a `write()` of *taco*.
+
+Derived from Jonas Berg's 'dummy_serial.py'.
 
 Source
 ======
