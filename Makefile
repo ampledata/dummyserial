@@ -24,6 +24,8 @@ install:
 uninstall:
 	pip uninstall -y dummyserial
 
+reinstall: uninstall install
+
 clean:
 	@rm -rf *.egg* build dist *.py[oc] */*.py[co] cover doctest_pypi.cfg \
 		nosetests.xml pylint.log output.xml flake8.log tests.log \
@@ -35,7 +37,9 @@ publish:
 nosetests:
 	python setup.py nosetests
 
-pep8: install_requirements
+pep8: flake8
+
+flake8: install_requirements
 	flake8 --max-complexity 12 --exit-zero dummyserial/*.py tests/*.py
 
 lint: install_requirements

@@ -9,7 +9,7 @@ Source:: https://github.com/ampledata/dummyserial
 
 
 __title__ = 'dummyserial'
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 __author__ = 'Greg Albrecht <gba@orionlabs.io>'
 __license__ = 'Apache License, Version 2.0'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc.'
@@ -42,6 +42,7 @@ setuptools.setup(
     long_description=open('README.rst').read(),
     url='https://github.com/ampledata/dummyserial',
     setup_requires=['coverage >= 3.7.1', 'nose >= 1.3.7'],
+    install_requires=['pyserial >= 2.7'],
     package_dir={'dummyserial': 'dummyserial'},
     zip_safe=False,
     include_package_data=True
