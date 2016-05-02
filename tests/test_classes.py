@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for RS-UV3 Classes."""
+"""Tests for Dummy Serial Classes."""
 
 import random
 import unittest

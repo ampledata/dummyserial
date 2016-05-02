@@ -3,11 +3,9 @@
 
 # Dummy Serial Python Module.
 
-
 """
 Dummy Serial Python Module.
 ~~~~
-
 
 :author: Greg Albrecht <gba@orionlabs.io>
 :copyright: Copyright 2016 Orion Labs, Inc.
