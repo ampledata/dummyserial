@@ -82,6 +82,62 @@ class DummySerialTest(unittest.TestCase):  # pylint: disable=R0904
 
         self.assertEqual(read_data, rand_write_str2)
 
+    def test_write_closed_port(self):
+        """Tests writing-to a closed Dummy Serial port."""
+        rand_write_len1 = random.randint(0, 1024)
+        rand_write_len2 = random.randint(0, 1024)
+        rand_write_str1 = self.random(rand_write_len1)
+        rand_write_str2 = self.random(rand_write_len2)
+
+        ds_instance = dummyserial.Serial(
+            port=self.random_serial_port,
+            baudrate=self.random_baudrate,
+            ds_responses={rand_write_str1: rand_write_str2}
+        )
+
+        self.assertTrue(ds_instance._isOpen)  # pylint: disable=W0212
+        ds_instance.close()
+        self.assertFalse(ds_instance._isOpen)  # pylint: disable=W0212
+        with self.assertRaises(SerialException):
+            ds_instance.write(rand_write_str1)
+        self.assertFalse(ds_instance._isOpen)  # pylint: disable=W0212
+
+    def test_write_and_read_to_closed_port(self):
+        """Tests writing-to and reading-from a closed Dummy Serial port."""
+        rand_write_len1 = random.randint(0, 1024)
+        rand_write_len2 = random.randint(0, 1024)
+        rand_write_str1 = self.random(rand_write_len1)
+        rand_write_str2 = self.random(rand_write_len2)
+
+        ds_instance = dummyserial.Serial(
+            port=self.random_serial_port,
+            baudrate=self.random_baudrate,
+            ds_responses={rand_write_str1: rand_write_str2}
+        )
+
+        self.assertTrue(ds_instance._isOpen)  # pylint: disable=W0212
+        ds_instance.write(rand_write_str1)
+        ds_instance.close()
+        self.assertFalse(ds_instance._isOpen)  # pylint: disable=W0212
+        with self.assertRaises(SerialException):
+            ds_instance.read(rand_write_len2)
+        self.assertFalse(ds_instance._isOpen)  # pylint: disable=W0212
+
+    def test_repr_port(self):
+        """Tests describing a Dummy Serial port."""
+        rand_write_len1 = random.randint(0, 1024)
+        rand_write_len2 = random.randint(0, 1024)
+        rand_write_str1 = self.random(rand_write_len1)
+        rand_write_str2 = self.random(rand_write_len2)
+
+        ds_instance = dummyserial.Serial(
+            port=self.random_serial_port,
+            baudrate=self.random_baudrate,
+            ds_responses={rand_write_str1: rand_write_str2}
+        )
+
+        self.assertTrue(self.random_serial_port in str(ds_instance))
+
     def test_open_port(self):
         """Tests opening an already-open Dummy Serial port."""
         rand_write_len1 = random.randint(0, 1024)
@@ -98,6 +154,10 @@ class DummySerialTest(unittest.TestCase):  # pylint: disable=R0904
         self.assertTrue(ds_instance._isOpen)  # pylint: disable=W0212
         with self.assertRaises(SerialException):
             ds_instance.open()
+        ds_instance.close()
+        self.assertFalse(ds_instance._isOpen)  # pylint: disable=W0212
+        ds_instance.open()
+        self.assertTrue(ds_instance._isOpen)  # pylint: disable=W0212
 
     def test_close(self):
         """Tests closing a Dummy Serial port."""
@@ -138,6 +198,7 @@ class DummySerialTest(unittest.TestCase):  # pylint: disable=R0904
 
         self.assertEqual(
             dummyserial.constants.NO_DATA_PRESENT, read_data)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -148,7 +148,6 @@ class Serial(object):
 
         # Do the actual reading from the waiting data, and simulate the
         # influence of size.
-
         if self._waiting_data == dummyserial.constants.DEFAULT_RESPONSE:
             return_str = self._waiting_data
         elif size == len(self._waiting_data):

@@ -15,3 +15,4 @@ Dummy Serial Python Module.
 """
 
 from .classes import Serial  # NOQA
+from .exceptions import DSIOError, DSTypeError  # NOQA
