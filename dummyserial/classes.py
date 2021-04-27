@@ -8,7 +8,7 @@ import logging.handlers
 import sys
 import time
 
-from serial.serialutil import SerialException, portNotOpenError
+from serial.serialutil import SerialException, PortNotOpenError
 
 import dummyserial.constants
 
