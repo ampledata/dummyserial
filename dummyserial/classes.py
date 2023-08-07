@@ -8,7 +8,7 @@ import logging.handlers
 import sys
 import time
 
-from serial.serialutil import SerialException, portNotOpenError
+from serial.serialutil import SerialException, PortNotOpenError
 
 import dummyserial.constants
 
@@ -105,7 +105,7 @@ class Serial(object):
         self._logger.debug('Writing (%s): "%s"', len(data), data)
 
         if not self._isOpen:
-            raise portNotOpenError
+            raise PortNotOpenError
 
         if sys.version_info[0] > 2:
             if not isinstance(data, bytes):
@@ -139,7 +139,7 @@ class Serial(object):
         self._logger.debug('Reading %s bytes.', size)
 
         if not self._isOpen:
-            raise portNotOpenError
+            raise PortNotOpenError
 
         if size < 0:
             raise dummyserial.exceptions.DSIOError(
